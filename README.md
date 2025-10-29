@@ -29,6 +29,10 @@ These namely include:
 3. [SwiGLU](https://arxiv.org/pdf/2002.05202) feedforward sub-layer instead of standard ReLU DNNs.
 4. [Rotary Positional Encoding](https://arxiv.org/pdf/2104.09864) instead of absolute positional encoding.
 
+<p align="center">
+      <td align="center"><img src="./tiny_llama_bg.png" width="750"/></td>
+</p>
+
 ---
 #### Work In Progress:
 
