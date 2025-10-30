@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Train script",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/training.py",
+            "console": "integratedTerminal",
+            "args": ["--resume_training", "0",
+                    "--vocab-size", "10_000",
+                    "--context_length", "256",
+                    "--num_layers", "4",
+                    "--d_model", "512",
+                    "--num_heads", "16",
+                    "--d_ff", "1344",
+                    "--theta", "10000",
+                    "--device", "cpu",
+                    "--save_checkpoints_to","./checkpoints/",
+                    "--adamw_lr", "0.01"]
+        }
+    ]
+}

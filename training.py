@@ -11,15 +11,15 @@ from optimizers import AdamW
 from losses import CrossEntropyLoss, Perplexity
 from training_utils import get_batch, load_checkpoint, save_checkpoint
 
-# Use either default config or user-specified setting
+# TODO Use either default config or user-specified setting
 # TODO set-up Wandb
 args = parse_args()
 
 device = args.device
 
 # Load the data in memory-mapped mode
-train_data = "./assignment1-basics/data_tokenized/TinyStoriesV2-GPT4-train_token_ids.npy"
-valid_data = "./assignment1-basics/data_tokenized/TinyStoriesV2-GPT4-valid_token_ids.npy"
+train_data = "./data_tokenized/TinyStoriesV2-GPT4-train_token_ids.npy"
+valid_data = "./data_tokenized/TinyStoriesV2-GPT4-valid_token_ids.npy"
 
 # Training data contains approx. 540M tokens
 train_token_ids = np.memmap(train_data, dtype=np.uint16, mode="r")

@@ -9,6 +9,11 @@ def parse_args():
     )
 
     p.add_argument(
+        "--resume_training", required=True, type=int, default=0,
+        help="Warm start with final existing checkpoint or start training from scratch"
+    )
+
+    p.add_argument(
         "--vocab-size", required=True, type=int,
         help="Size of the vocabulary."
     )
@@ -51,6 +56,26 @@ def parse_args():
     p.add_argument(
         "--save_checkpoints_to", required=True, type=str,
         help="Path to serialize the checkpoints to."
+    )
+
+    p.add_argument(
+        "--adamw_lr", required=True, type=float,
+        help="Initial learning rate for AdamW"
+    )
+
+    p.add_argument(
+        "--adamw_beta1", required=False, type=float,
+        help="Beta1 parameter for AdamW"
+    )
+
+    p.add_argument(
+        "--adamw_beta2", required=False, type=float,
+        help="Beta2 parameter for AdamW"
+    )
+
+    p.add_argument(
+        "--adamw_weight_decay", required=False, type=float,
+        help="Weight decay parameter for AdamW"
     )
 
     return p.parse_args()

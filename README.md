@@ -30,7 +30,7 @@ These namely include:
 4. [Rotary Positional Encoding](https://arxiv.org/pdf/2104.09864) instead of absolute positional encoding.
 
 <p align="center">
-      <td align="center"><img src="./tiny_llama_bg.png" width="750"/></td>
+      <td align="center"><img src="./illus/tiny_llama_bg.png" width="750"/></td>
 </p>
 
 ---
