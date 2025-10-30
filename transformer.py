@@ -210,6 +210,8 @@ class CausalMultiheadSelfAttention(nn.Module):
 
         self.n_heads = n_heads
 
+        self.device = device
+
         self.dim_heads = int(d_model // self.n_heads)
 
         # Linear transforms
@@ -258,7 +260,7 @@ class CausalMultiheadSelfAttention(nn.Module):
             K = self.rope(K, token_positions)
 
         # Create causal mask
-        causal_mask = torch.tril(torch.ones(seq_len, seq_len))
+        causal_mask = torch.tril(torch.ones(seq_len, seq_len)).to(self.device)
 
         # Compute each head's attention with causal masking
         head_attentions = self.compute_attention(Q, K, V, causal_mask)

@@ -36,10 +36,9 @@ These namely include:
 ---
 #### Work In Progress:
 
-1. Training pipeline
-2. Support for gradient accumulating + checkpointing
-3. Support for different parallelism degrees (DP as a start and eventually others)
-4. Inference pipeline, support for KV-cache
+1. Support for gradient accumulating + checkpointing
+2. Support for different parallelism degrees (DP as a start and eventually others)
+3. Efficient inference pipeline, support for KV-cache
 
 #### Longer-term wishlist:
 

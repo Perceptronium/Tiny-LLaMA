@@ -36,7 +36,8 @@ model = TransformerLM(vocab_size=args.vocab_size,
                       d_model=args.d_model,
                       num_heads=args.num_heads,
                       d_ff=args.d_ff,
-                      theta=args.theta)
+                      theta=args.theta,
+                      device=device)
 
 # Instantiate the optimizer
 optimizer = AdamW(model.parameters(), lr=args.adamw_lr)
@@ -50,12 +51,10 @@ checkpoint_path = Path(args.save_checkpoints_to)
 checkpoint_path.mkdir(parents=True, exist_ok=True)
 
 # TODO make these a user-specified argument ?
-# total_tokens_processed = 327_680_000 # For GPU
+total_tokens_processed = 327_680_000 # For GPU
+# total_tokens_processed = 40_960_000  # For CPU
 
-# Training on CPU for now to run small sanity checks
-total_tokens_processed = 40_960_000  # For CPU
-
-total_step_count = 5_000  # 10_000 for GPU
+total_step_count = 10_000
 context_length = args.context_length
 batch_size = int(total_tokens_processed / (total_step_count * context_length))
 
@@ -81,6 +80,7 @@ while epoch < total_step_count:
                                 batch_size,
                                 context_length,
                                 device=device)
+
     outputs = model(inputs)
 
     loss = criterion(outputs, targets)
