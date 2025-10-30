@@ -1,6 +1,8 @@
 """ Train a cute Tiny-LLaMA on a cute Tiny-Stories dataset
     WORK IN PROGRESS """
 
+# python ./training.py --resume_training 0 --vocab-size 10_000 --context_length 256 --num_layers 4 --d_model 512 --num_heads 16 --d_ff 1344 --theta 10000 --device cpu --save_checkpoints_to ./checkpoints/ --adamw_lr 0.01
+
 import torch
 import numpy as np
 from pathlib import Path
@@ -79,7 +81,6 @@ while epoch < total_step_count:
                                 batch_size,
                                 context_length,
                                 device=device)
-
     outputs = model(inputs)
 
     loss = criterion(outputs, targets)
