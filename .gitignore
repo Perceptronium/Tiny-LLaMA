@@ -1,3 +1,6 @@
 checkpoints
 data_tokenized
 __pycache__
+data_tokenized
+data
+tiny_stories_vocab

@@ -7,7 +7,7 @@ def get_batch(dataset: np.array, batch_size: int, context_length: int, device: s
 
     set_size = len(dataset)
 
-    sample_ids = torch.randint(low=0, high=set_size-context_length, size=(batch_size,))
+    sample_ids = torch.randint(low=0, high=set_size-context_length-1, size=(batch_size,))
 
     inputs = torch.empty(batch_size, context_length, dtype=torch.long)
     targets = torch.empty(batch_size, context_length, dtype=torch.long)

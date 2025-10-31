@@ -120,28 +120,30 @@ if __name__ == "__main__":
         with path.open("rb") as f:
             return pickle.load(f)
 
-    vocab_path = Path("../results_old/tiny_stories_bpe_vocab.pkl")
+    vocab_path = Path("./tiny_stories_vocab/tiny_stories_bpe_vocab.pkl")
     vocab = load_pickle(vocab_path)
 
-    merges_path = Path("../results_old/tiny_stories_bpe_merges.pkl")
+    merges_path = Path("./tiny_stories_vocab/tiny_stories_bpe_merges.pkl")
     merges = load_pickle(merges_path)
 
     tokenizer = Tokenizer(vocab=vocab, merges=merges, special_tokens=["<|endoftext|>"])
 
     # Load TinyStories-train and TinyStories-valid, encode them, and save them in ../data_tokenized
-    data_root = Path("../data")
-    output_root = Path("../data_tokenized")
+    data_root = Path("./data")
+    output_root = Path("./data_tokenized")
 
-    for split in ["TinyStoriesV2-GPT4-valid.txt"]:  # "TinyStoriesV2-GPT4-train.txt"]:
+    for split in ["TinyStoriesV2-GPT4-valid.txt", "TinyStoriesV2-GPT4-train.txt"]:
         print(f"Loading {split}")
 
         in_path = data_root / split
 
         # FIX: stream text as UTF-8 lines instead of reading the whole file as bytes
         with in_path.open("r", encoding="utf-8") as f:
-            # token_ids = list(tokenizer.encode_iterable(f))
-            chunk = f.read()
-            token_ids = tokenizer.encode(chunk)
+            token_ids = list(tokenizer.encode_iterable(f))
+            if max(token_ids) > 10_000:
+                breakpoint()
+            # chunk = f.read()
+            # token_ids = tokenizer.encode(chunk)
 
         arr = np.asarray(token_ids, dtype=np.uint16)
         np.save(output_root / (split.replace(".txt", "") + "_token_ids_bis.npy"), arr)

@@ -150,7 +150,7 @@ class RotaryPositionalEmbedding(nn.Module):
 
     def forward(self, x: torch.Tensor, token_positions: torch.Tensor):
 
-        # x shape [..., seq_len, model_dim]
+        # x shape [..., seq_len, dim]
 
         x_complex = torch.view_as_complex(x.reshape(*x.shape[:-1], -1, 2))
         rots = self.cos_sin_matrix[token_positions]

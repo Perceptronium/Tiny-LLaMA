@@ -13,6 +13,8 @@ from optimizers import AdamW
 from losses import CrossEntropyLoss, Perplexity
 from training_utils import get_batch, load_checkpoint, save_checkpoint
 
+torch.manual_seed(0)
+
 # TODO Use either default config or user-specified setting
 # TODO set-up Wandb
 args = parse_args()
@@ -20,8 +22,8 @@ args = parse_args()
 device = args.device
 
 # Load the data in memory-mapped mode
-train_data = "./data_tokenized/TinyStoriesV2-GPT4-train_token_ids.npy"
-valid_data = "./data_tokenized/TinyStoriesV2-GPT4-valid_token_ids.npy"
+train_data = "./data_tokenized/TinyStoriesV2-GPT4-train_token_ids_bis.npy"
+valid_data = "./data_tokenized/TinyStoriesV2-GPT4-valid_token_ids_bis.npy"
 
 # Training data contains approx. 540M tokens
 train_token_ids = np.memmap(train_data, dtype=np.uint16, mode="r")
@@ -97,13 +99,14 @@ while epoch < total_step_count:
                                     batch_size,
                                     context_length,
                                     device=device)
+
         outputs = model(inputs)
         loss = criterion(outputs, targets)
         print(f"Valid loss: {loss.item():.3f}")
 
     # Checkpoint the run every 10 epochs
     saving_location = checkpoint_path / Path(f"epoch_{epoch}.pt")
-    if epoch % 10 == 0:
+    if epoch % 100 == 0:
         save_checkpoint(model=model,
                         optimizer=optimizer,
                         iteration=epoch,
