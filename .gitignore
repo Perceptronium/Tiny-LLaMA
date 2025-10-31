@@ -4,3 +4,4 @@ __pycache__
 data_tokenized
 data
 tiny_stories_vocab
+pre_trained_tiny_llama_models/*
