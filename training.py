@@ -1,5 +1,4 @@
-""" Train a cute Tiny-LLaMA on a cute Tiny-Stories dataset
-    WORK IN PROGRESS """
+""" Train a cute Tiny-LLaMA model"""
 
 import torch
 import numpy as np
