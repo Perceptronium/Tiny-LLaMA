@@ -20,7 +20,7 @@ class Config:
     # Training hyperparameters
     total_tokens_processed: int = 327_680_000
     batch_size: int = 128
-    total_step_count: int(total_tokens_processed / (batch_size * context_length)) # Currently yields 10_000
+    total_step_count: int = int(total_tokens_processed / (batch_size * context_length)) # Currently yields 10_000
 
     # AdamW hyperparameters
     adamw_lr: float = 1e-3

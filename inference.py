@@ -38,7 +38,7 @@ def generate_text(prompt: str,
         output_ids.append(indices[next_token_id].item())
 
         new_tokens_ctr += 1
-        if next_token_id == eot_id:
+        if indices[next_token_id].item() == eot_id:
             break
 
     return tokenizer.decode(output_ids)
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     checkpoint = "./checkpoints/epoch_10000.pt"
     _ = load_checkpoint(src=checkpoint, model=model, optimizer=optimizer)
 
-    prompt = "Once upon a time, there was a computer science team named Ockham."
+    prompt = "My name is Can"
 
     output = generate_text(prompt=prompt,
                             model=model,
