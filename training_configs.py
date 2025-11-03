@@ -4,6 +4,9 @@ from dataclasses import dataclass
 @dataclass
 class Config:
 
+    # Datasets
+    data: str = "Tiny-Stories" # Currently supported option isTiny-Stories
+
     # Transformer hyperparameters
     resume_training : bool = False
     vocab_size: int = 10_000

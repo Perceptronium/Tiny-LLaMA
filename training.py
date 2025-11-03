@@ -20,13 +20,16 @@ args = Config()
 device = args.device
 
 # Load the data in memory-mapped mode
-train_data = "./data_tokenized/TinyStoriesV2-GPT4-train_token_ids_bis.npy"
-valid_data = "./data_tokenized/TinyStoriesV2-GPT4-valid_token_ids_bis.npy"
+if args.data == "Tiny-Stories":
+    train_data = "./data_tokenized/TinyStoriesV2-GPT4-train_token_ids_bis.npy"
+    valid_data = "./data_tokenized/TinyStoriesV2-GPT4-valid_token_ids_bis.npy"
+else:
+    raise NotImplementedError
 
-# Training data contains approx. 540M tokens
+# Training data contains approx. 540M tokens for Tiny Stories
 train_token_ids = np.load(train_data, mmap_mode='r')
 
-# Validation data contains approx. 5.5M tokens
+# Validation data contains approx. 5.5M tokens for Tiny Stories
 valid_token_ids = np.load(valid_data, mmap_mode='r')
 
 # Instantiate the model
