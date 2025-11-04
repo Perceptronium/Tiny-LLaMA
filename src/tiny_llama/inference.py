@@ -79,7 +79,7 @@ if __name__ == "__main__":
                       device=device)
     optimizer = AdamW(model.parameters(), lr=args.adamw_lr)
 
-    checkpoint = "./checkpoints/epoch_10000.pt"
+    checkpoint = "./checkpoints_valid/epoch_10000.pt"
     _ = load_checkpoint(src=checkpoint, model=model, optimizer=optimizer)
 
     prompt = "My name is Can"

@@ -29,7 +29,6 @@ class Config:
 
     # Learning rate scheduling parameterss
     lr_scheduler: bool = True
-    maximal_learning_rate: float = adamw_lr
     minimal_learning_rate_ratio: float = 0.1
     nb_warmup_iters_ratio: float = 0.01
     nb_cosine_annealing_iters: int = int(total_step_count - nb_warmup_iters_ratio*total_step_count)
