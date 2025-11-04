@@ -59,6 +59,7 @@ if __name__ == "__main__":
     from dataclasses import asdict
     import numpy as np
     import argparse
+    import pandas as pd
 
     p = argparse.ArgumentParser()
     p.add_argument("--model_config", type=str, required=True)
@@ -80,6 +81,7 @@ if __name__ == "__main__":
 
 
     # Given hyperparameters, initialize a model
+    # TODO: add number of parameters of each config
     model_config = args.model_config
 
     model = TransformerLM(vocab_size=args.vocab_size,
@@ -103,9 +105,33 @@ if __name__ == "__main__":
                             warmup_steps=args.warmup_steps,
                             time_execution_steps=args.time_execution_steps)
 
-    # models[model_config] = {}
-    # models[model_config]["mean_fw_times"] = np.mean(np.array(fw_times))
-    # models[model_config]["std_bw_times"] = np.std(np.array(bw_times))
+    # Convert to arrays (robust if lists)
+    fw = np.asarray(fw_times, dtype=float)
+    bw = np.asarray(bw_times, dtype=float)
+
+    # Compute summary stats (seconds)
+    mean_fw = float(fw.mean()) if fw.size else np.nan
+    std_fw  = float(fw.std())  if fw.size else np.nan
+    mean_bw = float(bw.mean()) if bw.size else np.nan
+    std_bw  = float(bw.std())  if bw.size else np.nan
+
+    # Assemble a single-row record: all CLI args + timing stats
+    row = {
+        **vars(args),
+        "mean_fw_s": mean_fw,
+        "std_fw_s": std_fw,
+        "mean_bw_s": mean_bw,
+        "std_bw_s": std_bw,
+    }
+
+    # Choose column order: all args first, then the stats
+    cols = list(vars(args).keys()) + ["mean_fw_s", "std_fw_s", "mean_bw_s", "std_bw_s"]
+
+    df = pd.DataFrame([{k: row[k] for k in cols}])
+
+    # Print as Markdown table
+    print(df)
+
 
     print(f"{model_config} done.")
 

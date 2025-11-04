@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-model_configs=("small" "medium" "large" "xl" "2.7B")
+# Not enough memory on an A30 to run larger models
+model_configs=("small" "medium" "large") # "xl" "2.7B")
 
-d_models=(768 1024 1280 1600 2560)
+d_models=(768 1024 1280) # 1600 2560)
 
-d_ffs=(3072 4096 5120 6400 10240)
+d_ffs=(3072 4096 5120) # 6400 10240)
 
 num_layerss=(12 24 36 48 32)
 
 num_headss=(12 16 20 25 32)
 
 vocab_size=10000
-batch_size=1
+batch_size=4
 context_length=256
 learning_rate=0.001
 rope_theta=10000

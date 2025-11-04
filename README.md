@@ -1,7 +1,7 @@
 # Tiny LLaMA:
-This is an ongoing project where I'm building a small LLaMA-like LLM from scratch.
+This is an ongoing project where I'm building a small LLaMA-like LLM from scratch. I'm working with a single A30 GPU for now.
 
-My goal is to understand in details what's under the hood of these models so I tried to make the code as reusable as possible for future reference.
+My goal is to understand in details what's under the hood of these models so I try to make the code as reusable as possible for future reference.
 
 **NB:** I'm essentially following the project structure of Stanford's CS-336. Check out my Tiny Tokenizer repo for an implementation of a BPE tokenizer.
 
