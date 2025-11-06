@@ -3,15 +3,15 @@
 import torch
 import numpy as np
 from pathlib import Path
+from dataclasses import asdict
 import wandb
 
-from transformer import TransformerLM
-from optimizers import AdamW
-from losses import CrossEntropyLoss, Perplexity
-from training_utils import get_batch, load_checkpoint, save_checkpoint
-from optim_utils import cosine_annealing_scheduler, gradient_clipping
-from training_configs import Config
-from dataclasses import asdict
+from tiny_llama.transformer import TransformerLM
+from tiny_llama.optimizers import AdamW
+from tiny_llama.losses import CrossEntropyLoss, Perplexity
+from tiny_llama.training_utils import get_batch, load_checkpoint, save_checkpoint
+from tiny_llama.optim_utils import cosine_annealing_scheduler, gradient_clipping
+from tiny_llama.training_configs import Config
 
 torch.manual_seed(0)
 
@@ -27,7 +27,7 @@ for adamw_lr in learning_rates:
         # entity="can-pouliquen-ecole-normale-sup-rieure-de-lyon",
         project="Learning rate sweeps",
         name=f"LR = {args.adamw_lr}"
-        )
+    )
 
     wandb_run.config.update(asdict(args))
 
@@ -48,13 +48,13 @@ for adamw_lr in learning_rates:
 
     # Instantiate the model
     model = TransformerLM(vocab_size=args.vocab_size,
-                        context_length=args.context_length,
-                        num_layers=args.num_layers,
-                        d_model=args.d_model,
-                        num_heads=args.num_heads,
-                        d_ff=args.d_ff,
-                        theta=args.theta,
-                        device=device)
+                          context_length=args.context_length,
+                          num_layers=args.num_layers,
+                          d_model=args.d_model,
+                          num_heads=args.num_heads,
+                          d_ff=args.d_ff,
+                          theta=args.theta,
+                          device=device)
 
     # Instantiate the optimizer
     optimizer = AdamW(model.parameters(), lr=args.adamw_lr)
@@ -93,13 +93,13 @@ for adamw_lr in learning_rates:
 
         if args.lr_scheduler:
             learning_rate = cosine_annealing_scheduler(iteration_idx=epoch,
-                                                        maximal_learning_rate=args.adamw_lr,
-                                                        minimal_learning_rate=args.minimal_learning_rate_ratio*args.adamw_lr,
-                                                        nb_warmup_iters=int(args.nb_warmup_iters_ratio*total_step_count),
-                                                        nb_cosine_annealing_iters=args.nb_cosine_annealing_iters)
+                                                       maximal_learning_rate=args.adamw_lr,
+                                                       minimal_learning_rate=args.minimal_learning_rate_ratio*args.adamw_lr,
+                                                       nb_warmup_iters=int(
+                                                           args.nb_warmup_iters_ratio*total_step_count),
+                                                       nb_cosine_annealing_iters=args.nb_cosine_annealing_iters)
             for group in optimizer.param_groups:
                 group["lr"] = learning_rate
-
 
         inputs, targets = get_batch(train_token_ids,
                                     batch_size,
@@ -114,7 +114,6 @@ for adamw_lr in learning_rates:
         optimizer.step()
         print(f"Train loss: {train_loss.item():.3f}")
 
-
         model.eval()
         with torch.no_grad():
             inputs, targets = get_batch(valid_token_ids,
@@ -128,7 +127,7 @@ for adamw_lr in learning_rates:
 
         # Log desired metrics
         wandb_run.log({"train_loss": train_loss,
-                        "valid_loss": val_loss})
+                       "valid_loss": val_loss})
 
         # Checkpoint the run every 100 epochs
         saving_location = checkpoint_path / Path(f"epoch_{epoch}.pt")
@@ -137,7 +136,6 @@ for adamw_lr in learning_rates:
                             optimizer=optimizer,
                             iteration=epoch,
                             out=saving_location)
-
 
         # TODO on user interruption (Ctrl+C), save checkpoint and logs
 

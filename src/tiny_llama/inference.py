@@ -3,7 +3,7 @@
 import torch
 import torch.nn as nn
 
-from transformer import Softmax
+from tiny_llama.transformer import Softmax
 
 
 def generate_text(prompt: str,
@@ -22,7 +22,8 @@ def generate_text(prompt: str,
     new_tokens_ctr = 0
     while (new_tokens_ctr < max_new_tokens):
 
-        logits = model(torch.tensor(output_ids).unsqueeze(0))  # shape [1, sequence_length, vocab_size]
+        # shape [1, sequence_length, vocab_size]
+        logits = model(torch.tensor(output_ids).unsqueeze(0))
         # Normalize to prob. distribution with temperature scaling
         probs = softmax(logits.squeeze()[-1] / softmax_temperature, dim=-1)
         # Choose token to predict with top-p sampling
@@ -46,14 +47,13 @@ def generate_text(prompt: str,
 
 if __name__ == "__main__":
     from pathlib import Path
-    import numpy as np
-    from transformer import TransformerLM
-    from optimizers import AdamW
-    from tokenizer import Tokenizer
-    from training_configs import Config
-    from training_utils import load_checkpoint
     import pickle
 
+    from tiny_llama.transformer import TransformerLM
+    from tiny_llama.optimizers import AdamW
+    from tiny_llama.tokenizer import Tokenizer
+    from tiny_llama.training_configs import Config
+    from tiny_llama.training_utils import load_checkpoint
 
     def load_pickle(path: Path):
         with path.open("rb") as f:
@@ -70,13 +70,13 @@ if __name__ == "__main__":
     args = Config()
     device = "cuda:0"
     model = TransformerLM(vocab_size=args.vocab_size,
-                      context_length=args.context_length,
-                      num_layers=args.num_layers,
-                      d_model=args.d_model,
-                      num_heads=args.num_heads,
-                      d_ff=args.d_ff,
-                      theta=args.theta,
-                      device=device)
+                          context_length=args.context_length,
+                          num_layers=args.num_layers,
+                          d_model=args.d_model,
+                          num_heads=args.num_heads,
+                          d_ff=args.d_ff,
+                          theta=args.theta,
+                          device=device)
     optimizer = AdamW(model.parameters(), lr=args.adamw_lr)
 
     checkpoint = "./checkpoints_valid/epoch_10000.pt"
@@ -85,12 +85,10 @@ if __name__ == "__main__":
     prompt = "My name is Can"
 
     output = generate_text(prompt=prompt,
-                            model=model,
-                            tokenizer=tokenizer,
-                            softmax_temperature=0.1,
-                            top_p_threshold=0.95,
-                            max_new_tokens=100)
+                           model=model,
+                           tokenizer=tokenizer,
+                           softmax_temperature=0.1,
+                           top_p_threshold=0.95,
+                           max_new_tokens=100)
 
     print(output)
-
-
