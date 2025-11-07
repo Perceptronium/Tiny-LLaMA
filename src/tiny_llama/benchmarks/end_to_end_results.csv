@@ -1,0 +1,4 @@
+Config,Parameters (M),d_model,d_ff,num_layers,num_heads,Avg. fwd time (s),Std. fwd time (s),Avg. bwd time (s),Std. bwd time (s)
+small,128,768,3072,12,12,0.051,0.0,0.064,0.001
+medium,423,1024,4096,24,16,0.142,0.001,0.15,0.001
+large,969,1280,5120,36,20,0.278,0.001,0.416,0.001

@@ -24,7 +24,7 @@ time_execution_steps=10
 
 for i in "${!model_configs[@]}"; do
     echo "${model_configs[$i]}"
-    python benchmarks/benchmarking_scripts.py \
+    python benchmarks/end_to_end_benchmarking.py \
     --model_config "${model_configs[$i]}" \
     --d_model "${d_models[$i]}" \
     --d_ff "${d_ffs[$i]}" \

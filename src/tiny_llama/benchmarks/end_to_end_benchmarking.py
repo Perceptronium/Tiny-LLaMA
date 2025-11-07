@@ -60,6 +60,8 @@ if __name__ == "__main__":
     import numpy as np
     import argparse
     import pandas as pd
+    from pathlib import Path
+    import os
 
     p = argparse.ArgumentParser()
     p.add_argument("--model_config", type=str, required=True)
@@ -81,7 +83,6 @@ if __name__ == "__main__":
 
 
     # Given hyperparameters, initialize a model
-    # TODO: add number of parameters of each config
     model_config = args.model_config
 
     model = TransformerLM(vocab_size=args.vocab_size,
@@ -105,36 +106,53 @@ if __name__ == "__main__":
                             warmup_steps=args.warmup_steps,
                             time_execution_steps=args.time_execution_steps)
 
-    # Convert to arrays (robust if lists)
+    # Number of params
+    nb_params = sum(p.numel() for p in model.parameters())
+
+    # Timings
     fw = np.asarray(fw_times, dtype=float)
     bw = np.asarray(bw_times, dtype=float)
 
-    # Compute summary stats (seconds)
-    mean_fw = float(fw.mean()) if fw.size else np.nan
-    std_fw  = float(fw.std())  if fw.size else np.nan
-    mean_bw = float(bw.mean()) if bw.size else np.nan
-    std_bw  = float(bw.std())  if bw.size else np.nan
+    # Timing stats
+    mean_fw = float(fw.mean())
+    std_fw  = float(fw.std())
+    mean_bw = float(bw.mean())
+    std_bw  = float(bw.std())
 
-    # Assemble a single-row record: all CLI args + timing stats
     row = {
-        **vars(args),
-        "mean_fw_s": mean_fw,
-        "std_fw_s": std_fw,
-        "mean_bw_s": mean_bw,
-        "std_bw_s": std_bw,
+        "Config": args.model_config,
+        "Parameters (M)": int(nb_params / 1e6),
+        "d_model": args.d_model,
+        "d_ff": args.d_ff,
+        "num_layers": args.num_layers,
+        "num_heads": args.num_heads,
+        "Avg. fwd time (s)": np.round(mean_fw, 3),
+        "Std. fwd time (s)": np.round(std_fw, 3),
+        "Avg. bwd time (s)": np.round(mean_bw, 3),
+        "Std. bwd time (s)": np.round(std_bw, 3),
     }
 
     # Choose column order: all args first, then the stats
-    cols = list(vars(args).keys()) + ["mean_fw_s", "std_fw_s", "mean_bw_s", "std_bw_s"]
+    cols = list(row.keys())
 
-    df = pd.DataFrame([{k: row[k] for k in cols}])
+    df_new = pd.DataFrame([row])
 
-    # Print as Markdown table
-    print(df)
+    # ==== Write into CSV ====
+    out_csv = "./benchmarks/end_to_end_results.csv"
+    csv_path = Path(out_csv)
+    if csv_path.exists():
+        df_old = pd.read_csv(csv_path)
+        if "Config" in df_old.columns:
+            df_old = df_old[df_old["Config"] != args.model_config]
+        df_all = pd.concat([df_old, df_new], ignore_index=True, sort=False)
+    else:
+        df_all = df_new
 
+    tmp_path = csv_path.with_suffix(".tmp.csv")
+    df_all.to_csv(tmp_path, index=False)
+    os.replace(tmp_path, csv_path)
 
-    print(f"{model_config} done.")
-
+    print(f"Saved config '{model_config}'.")
 
 
 
