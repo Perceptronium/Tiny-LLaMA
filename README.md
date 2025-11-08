@@ -1,5 +1,5 @@
 # Tiny LLaMA:
-This is an ongoing project where I'm building a small LLaMA-like LLM from scratch. I'm working with a single A30 GPU for now.
+This is an ongoing project where I'm building a small LLaMA-like LLM from scratch. This is accompanied with a series of weekly tutorials I give in our lab at the ENS de Lyon.
 
 My goal is to understand in details what's under the hood of these models so I try to make the code as reusable as possible for future reference.
 
